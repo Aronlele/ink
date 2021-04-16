@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/InkProject/blackfriday"
 	"gopkg.in/yaml.v2"
+
+	"github.com/InkProject/blackfriday"
 )
 
 type SiteConfig struct {
@@ -33,7 +34,7 @@ type AuthorConfig struct {
 }
 
 type BuildConfig struct {
-	Output	string
+	Output  string
 	Port    string
 	Watch   bool
 	Copy    []string
@@ -62,6 +63,8 @@ type ArticleConfig struct {
 	Top        bool
 	Type       string
 	Hide       bool
+	Image      string
+	Subtitle   string
 	Config     interface{}
 }
 
@@ -80,6 +83,8 @@ type Article struct {
 	Content  template.HTML
 	Link     string
 	Config   interface{}
+	Image    string
+	Subtitle string
 }
 
 type ThemeConfig struct {
@@ -122,7 +127,7 @@ func ParseGlobalConfig(configPath string, develop bool) *GlobalConfig {
 	if config.Site.Url != "" && strings.HasSuffix(config.Site.Url, "/") {
 		config.Site.Url = strings.TrimSuffix(config.Site.Url, "/")
 	}
-	if (config.Build.Output == "") {
+	if config.Build.Output == "" {
 		config.Build.Output = "public"
 	}
 	// Parse Theme Config
@@ -220,6 +225,8 @@ func ParseArticle(markdownPath string) *Article {
 	article.Topic = config.Topic
 	article.Draft = config.Draft
 	article.Top = config.Top
+	article.Image = config.Image
+	article.Subtitle = config.Subtitle
 	if author, ok := globalConfig.Authors[config.Author]; ok {
 		author.Id = config.Author
 		author.Avatar = ReplaceRootFlag(author.Avatar)
